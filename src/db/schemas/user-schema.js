@@ -14,10 +14,6 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    phoneNumber: {
-      type: String,
-      required: false,
-    },
     address: {
       type: new Schema(
         {
@@ -29,12 +25,12 @@ const UserSchema = new Schema(
           _id: false,
         }
       ),
-      required: false,
+      required: true,
     },
-    role: {
-      type: String,
+    isAdmin: {
+      type: Boolean,
       required: false,
-      default: "basic-user",
+      default: "false",
     },
   },
   {

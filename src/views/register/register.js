@@ -6,6 +6,8 @@ const fullNameInput = document.querySelector("#fullNameInput");
 const emailInput = document.querySelector("#emailInput");
 const passwordInput = document.querySelector("#passwordInput");
 const passwordConfirmInput = document.querySelector("#passwordConfirmInput");
+const postCodeInput = document.querySelector("#postCodeInput");
+const addressInput = document.querySelector("#addressInput");
 const submitButton = document.querySelector("#submitButton");
 
 addAllElements();
@@ -27,12 +29,16 @@ async function handleSubmit(e) {
   const email = emailInput.value;
   const password = passwordInput.value;
   const passwordConfirm = passwordConfirmInput.value;
+  const postCode = postCodeInput.value;
+  const address = addressInput.value;
 
   // 잘 입력했는지 확인
   const isFullNameValid = fullName.length >= 2;
   const isEmailValid = validateEmail(email);
   const isPasswordValid = password.length >= 4;
   const isPasswordSame = password === passwordConfirm;
+  const isPostCodeValid = postCode.length === 5;
+  const isAddressValid = address.length >= 2;
 
   if (!isFullNameValid || !isPasswordValid) {
     return alert("이름은 2글자 이상, 비밀번호는 4글자 이상이어야 합니다.");
@@ -46,9 +52,17 @@ async function handleSubmit(e) {
     return alert("비밀번호가 일치하지 않습니다.");
   }
 
+  if (!isPostCodeValid) {
+    return alert("우편번호는 숫자 5자리를 입력해 주세요.");
+  }
+
+  if (!isAddressValid) {
+    return alert("올바른 주소를 입력해주세요.");
+  }
+
   // 회원가입 api 요청
   try {
-    const data = { fullName, email, password };
+    const data = { fullName, email, password, postCode, address };
 
     await Api.post("/api/register", data);
 
