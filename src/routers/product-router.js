@@ -16,16 +16,50 @@ productRouter.post(
     if (!req.namelist || req.namelist.length === 0) {
       throw new Error("상품 이미지가 필요합니다");
     }
-    const { name, price, amount, category, description } = req.body;
+    const { name, price, category, description } = req.body;
     const newProduct = await productService.addProduct({
       name,
       price,
-      amount,
       category,
       description,
       images: req.namelist.map((name) => `${req.imgPath}/${name}`),
     });
     res.status(201).json(newProduct);
+  })
+);
+
+productRouter.patch(
+  "/:productId",
+  loginRequired,
+  adminRequired,
+  asyncHandler(async function (req, res, next) {
+    const { productId } = req.params;
+    const { name, price, category, description } = req.body;
+
+    const toUpdate = {
+      ...(name && { name }),
+      ...(price && { price }),
+      ...(category && { category }),
+      ...(description && { description }),
+    };
+
+    const updatedProductInfo = await productService.setProduct(
+      productId,
+      toUpdate
+    );
+
+    res.status(200).json(updatedProductInfo);
+  })
+);
+
+productRouter.delete(
+  "/:productId",
+  loginRequired,
+  adminRequired,
+  asyncHandler(async function (req, res, next) {
+    const { productId } = req.params;
+    const result = await productService.deleteProduct(productId);
+    res.status(201).json(result);
   })
 );
 
