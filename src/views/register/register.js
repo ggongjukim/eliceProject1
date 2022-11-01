@@ -82,7 +82,6 @@ async function handleEmailCheck(e) {
   e.preventDefault();
   const email = emailInput.value;
   const user = await Api.get(`/api/email/${email}`);
-  console.log(user);
   if (user) {
     emailInput.value = "";
     return alert("중복된 이메일입니다.");

@@ -48,9 +48,11 @@ userRouter.post(
 
     // 로그인 진행 (로그인 성공 시 jwt 토큰을 프론트에 보내 줌)
     const userToken = await userService.getUserToken({ email, password });
+    // 로그인한 사용자가 admin 유저인지 확인하기위해 유저를 받아옴
+    const user = await userService.getEmail(email);
 
-    // jwt 토큰을 프론트에 보냄 (jwt 토큰은, 문자열임)
-    res.status(200).json(userToken);
+    // jwt 토큰과 user를 프론트에 보냄 (jwt 토큰은, 문자열임)
+    res.status(200).json({ userToken, user });
   })
 );
 
