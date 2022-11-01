@@ -13,6 +13,9 @@ productRouter.post(
   adminRequired,
   upload.array("images"),
   asyncHandler(async function (req, res, next) {
+    if (!req.namelist || req.namelist.length === 0) {
+      throw new Error("상품 이미지가 필요합니다");
+    }
     const { name, price, amount, category, description } = req.body;
     const newProduct = await productService.addProduct({
       name,
