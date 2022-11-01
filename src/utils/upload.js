@@ -20,13 +20,18 @@ const upload = multer({
   storage: multer.diskStorage({
     //폴더위치 지정
     destination: (req, file, done) => {
-      const path = __dirname.split("/");
-      done(null, `${path.slice(0, path.length - 1).join("/")}/assets/images`);
+      const currPath = __dirname.split("/");
+      const imgPath = `${currPath
+        .slice(0, currPath.length - 1)
+        .join("/")}/uploads`;
+      req.imgPath = imgPath;
+      done(null, imgPath);
     },
     filename: (req, file, done) => {
       const ext = path.extname(file.originalname);
       // aaa.txt => aaa+&&+129371271654.txt
       const fileName = path.basename(file.originalname, ext) + Date.now() + ext;
+      req.namelist = req.namelist ? [...req.namelist, fileName] : [fileName];
       done(null, fileName);
     },
   }),
