@@ -14,23 +14,18 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    postCode: {
+      type: String,
+      required: true,
+    },
     address: {
-      type: new Schema(
-        {
-          postalCode: String,
-          address1: String,
-          address2: String,
-        },
-        {
-          _id: false,
-        }
-      ),
+      type: String,
       required: true,
     },
     isAdmin: {
       type: Boolean,
       required: false,
-      default: "false",
+      default: false,
     },
   },
   {
