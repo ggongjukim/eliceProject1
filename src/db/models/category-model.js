@@ -18,6 +18,17 @@ export class CategoryModel {
     const categories = await Category.find({});
     return categories;
   }
+
+  async update(categoryId, name) {
+    const filter = { _id: categoryId };
+    const option = { returnOriginal: false };
+    const updatedCategory = await Category.findByIdAndUpdate(
+      filter,
+      { name },
+      option
+    );
+    return updatedCategory;
+  }
 }
 
 const categoryModel = new CategoryModel();

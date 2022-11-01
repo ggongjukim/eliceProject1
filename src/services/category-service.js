@@ -15,6 +15,11 @@ class CategoryService {
     const category = await categoryModel.findById(categoryId);
     return category;
   }
+
+  async setCategory(categoryId, name) {
+    const category = await categoryModel.update(categoryId, name);
+    return category;
+  }
 }
 
 const categoryService = new CategoryService();

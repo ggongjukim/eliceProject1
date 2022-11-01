@@ -19,6 +19,19 @@ categoryRouter.post(
   })
 );
 
+categoryRouter.patch(
+  "/:categoryId",
+  loginRequired,
+  adminRequired,
+  asyncHandler(async function (req, res, next) {
+    const { categoryId } = req.params;
+    const { name } = req.body;
+
+    const updatedCategory = await categoryService.setCategory(categoryId, name);
+    res.status(201).json(updatedCategory);
+  })
+);
+
 categorylistRouter.get(
   "/",
   asyncHandler(async function (req, res, next) {
