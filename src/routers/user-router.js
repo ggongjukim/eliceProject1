@@ -136,4 +136,14 @@ userRouter.delete(
   })
 );
 
+// for email 중복체크. DB에서 이메일로 유저를 가져와 프론트에 보내 줌
+userRouter.get(
+  "/email/:email",
+  asyncHandler(async function (req, res, next) {
+    const { email } = req.params;
+    const user = await userService.getEmail(email);
+    res.status(200).json(user);
+  })
+);
+
 export { userRouter };

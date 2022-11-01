@@ -55,7 +55,7 @@ function alertGreetingText() {
 
 // 로그인 상태일 경우 헤더 GUI 변경. (로그인 / 회원가입 ⇒ 로그아웃)
 function insertLogoutLi() {
-  if (sessionStorage.getItem("token")) {
+  if (localStorage.getItem("token")) {
     const loginLi = document.querySelector("#navbar__login");
     const registerLi = document.querySelector("#navbar__register");
     const logoutLi = document.createElement("li");
@@ -75,7 +75,7 @@ function insertLogoutLi() {
 function loginLogoutHandler(event) {
   event.preventDefault();
   if (event.target.parentNode.id === "navbar__logout") {
-    sessionStorage.removeItem("token");
+    localStorage.removeItem("token");
     document.location.href = "/";
   } else if (event.target.parentNode.id === "navbar__login") {
     document.location.href = "/login";

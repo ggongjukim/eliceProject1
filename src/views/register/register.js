@@ -9,6 +9,7 @@ const passwordConfirmInput = document.querySelector("#passwordConfirmInput");
 const postCodeInput = document.querySelector("#postCodeInput");
 const addressInput = document.querySelector("#addressInput");
 const submitButton = document.querySelector("#submitButton");
+const emailCheckButton = document.querySelector("#emailCheck");
 
 addAllElements();
 addAllEvents();
@@ -19,6 +20,7 @@ async function addAllElements() {}
 // 여러 개의 addEventListener들을 묶어주어서 코드를 깔끔하게 하는 역할임.
 function addAllEvents() {
   submitButton.addEventListener("click", handleSubmit);
+  emailCheckButton.addEventListener("click", handleEmailCheck);
 }
 
 // 회원가입 진행
@@ -74,4 +76,16 @@ async function handleSubmit(e) {
     console.error(err.stack);
     alert(`문제가 발생하였습니다. 확인 후 다시 시도해 주세요: ${err.message}`);
   }
+}
+
+async function handleEmailCheck(e) {
+  e.preventDefault();
+  const email = emailInput.value;
+  const user = await Api.get(`/api/email/${email}`);
+  console.log(user);
+  if (user) {
+    emailInput.value = "";
+    return alert("중복된 이메일입니다.");
+  }
+  alert("사용 가능한 이메일입니다.");
 }
