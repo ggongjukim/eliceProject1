@@ -17,7 +17,9 @@ export class ProductModel {
   }
 
   async findAll() {
-    const product = await Product.find({}).populate("category");
+    const product = await Product.find({})
+      .populate("category")
+      .sort({ createdAt: -1 });
     return product;
   }
 

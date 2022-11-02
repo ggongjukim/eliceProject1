@@ -29,7 +29,8 @@ export class OrderModel {
         populate: {
           path: "product",
         },
-      });
+      })
+      .sort({ createdAt: -1 });
     return orders;
   }
 
@@ -41,7 +42,8 @@ export class OrderModel {
         populate: {
           path: "product",
         },
-      });
+      })
+      .sort({ createdAt: -1 });
     return orders;
   }
 
