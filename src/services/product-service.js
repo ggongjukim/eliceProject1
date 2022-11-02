@@ -15,6 +15,16 @@ class ProductService {
     const product = await productModel.findById(productId);
     return product;
   }
+
+  async setProduct(productId, toUpdate) {
+    const product = await productModel.update(productId, toUpdate);
+    return product;
+  }
+
+  async deleteProduct(productId) {
+    const result = await productModel.deleteById(productId);
+    return result;
+  }
 }
 
 const productService = new ProductService();
