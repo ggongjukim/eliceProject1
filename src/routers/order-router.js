@@ -64,6 +64,17 @@ orderRouter.patch(
   })
 );
 
+orderRouter.delete(
+  "/:orderId",
+  loginRequired,
+  adminRequired,
+  asyncHandler(async function (req, res, next) {
+    const { orderId } = req.params;
+    const result = await orderService.deleteOrder(orderId);
+    res.status(201).json(result);
+  })
+);
+
 orderlistRouter.get(
   "/",
   loginRequired,
