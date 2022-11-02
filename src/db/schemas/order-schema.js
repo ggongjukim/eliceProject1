@@ -35,13 +35,15 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
     },
-    request: {
+    requirement: {
       type: String,
+      required: false,
     },
     process: {
       type: String,
-      enum: ["WAIT", "INPROGRESS", "COMPLETED"],
-      required: true,
+      enum: ["WAIT", "INPROGRESS", "COMPLETED", "CANCEL"],
+      required: false,
+      default: "WAIT",
     },
   },
   {
