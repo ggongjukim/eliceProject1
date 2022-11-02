@@ -1,24 +1,42 @@
 import { Schema } from "mongoose";
 
+const OrderElementSchema = new Schema({
+  product: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "products",
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+});
+
 const OrderSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "user",
+      ref: "users",
     },
-    product: {
-      type: Schema.Types.ObjectId,
-      requred: true,
-      ref: "product",
+    list: {
+      type: [OrderElementSchema],
+      required: true,
+    },
+    receiver: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
     },
     address: {
       type: String,
       required: true,
     },
-    amount: {
-      type: Number,
-      required: true,
+    request: {
+      type: String,
     },
     process: {
       type: String,
@@ -27,7 +45,7 @@ const OrderSchema = new Schema(
     },
   },
   {
-    collection: "order",
+    collection: "orders",
     timestamps: true,
   }
 );
