@@ -20,11 +20,7 @@ const upload = multer({
   storage: multer.diskStorage({
     //폴더위치 지정
     destination: (req, file, done) => {
-      const currPath = __dirname.split("/");
-      const imgPath = `${currPath
-        .slice(0, currPath.length - 1)
-        .join("/")}/uploads`;
-      req.imgPath = imgPath;
+      const imgPath = path.join(__dirname, "../views");
       done(null, imgPath);
     },
     filename: (req, file, done) => {

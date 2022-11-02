@@ -16,13 +16,17 @@ productRouter.post(
     if (!req.namelist || req.namelist.length === 0) {
       throw new Error("상품 이미지가 필요합니다");
     }
+
+    if (req.fileValidationError) {
+      throw new Error(req.fileValidationError);
+    }
     const { name, price, category, description } = req.body;
     const newProduct = await productService.addProduct({
       name,
       price,
       category,
       description,
-      images: req.namelist.map((name) => `${req.imgPath}/${name}`),
+      images: req.namelist.map((name) => `/${name}`),
     });
     res.status(201).json(newProduct);
   })
