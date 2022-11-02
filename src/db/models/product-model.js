@@ -10,12 +10,14 @@ export class ProductModel {
   }
 
   async findById(productId) {
-    const product = await Product.findOne({ _id: productId });
+    const product = await Product.findOne({ _id: productId }).populate(
+      "category"
+    );
     return product;
   }
 
   async findAll() {
-    const product = await Product.find({});
+    const product = await Product.find({}).populate("category");
     return product;
   }
 
@@ -27,7 +29,7 @@ export class ProductModel {
       filter,
       update,
       option
-    );
+    ).populate("category");
     return updatedProduct;
   }
 
