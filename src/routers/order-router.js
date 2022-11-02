@@ -10,17 +10,15 @@ orderRouter.post(
   "/register",
   loginRequired,
   asyncHandler(async function (req, res, next) {
-    const { user, list, receiver, phone, address, requirement, process } =
-      req.body;
+    const { list, receiver, phone, address, requirement } = req.body;
 
     const newOrder = await orderService.addOrder({
-      user,
+      user: req.currentUserId,
       list,
       receiver,
       phone,
       address,
-      requirement,
-      process,
+      ...(requirement && { requirement }),
     });
 
     res.status(201).json(newOrder);
@@ -37,11 +35,40 @@ orderRouter.get(
   })
 );
 
+orderRouter.patch(
+  "/:orderId",
+  loginRequired,
+  asyncHandler(async function (req, res, next) {
+    const { orderId } = req.params;
+    const order = await orderService.getOrderById(orderId);
+    if (order.process !== "WAIT") {
+      throw new Error("배송 정보를 수정할 수 없는 상태입니다");
+    }
+
+    const { list, receiver, phone, address, requirement, process } = req.body;
+    if (process && !req.isAdmin) {
+      throw new Error("배송 상태는 관리자만이 수정할 수 있습니다");
+    }
+
+    const toUpdate = {
+      ...(list && { list }),
+      ...(receiver && { receiver }),
+      ...(phone && { phone }),
+      ...(address && { address }),
+      ...(requirement && { requirement }),
+      ...(process && { process }),
+    };
+
+    const updatedOrder = await orderService.setOrder(orderId, toUpdate);
+    res.status(201).json(updatedOrder);
+  })
+);
+
 orderlistRouter.get(
   "/",
   loginRequired,
   adminRequired,
-  asyncHandler(async function () {
+  asyncHandler(async function (req, res, next) {
     const orders = await orderService.getOrderlist();
     res.status(201).json(orders);
   })
@@ -50,9 +77,9 @@ orderlistRouter.get(
 orderlistRouter.get(
   "/:userId",
   loginRequired,
-  asyncHandler(async function () {
+  asyncHandler(async function (req, res, next) {
     const { userId } = req.params;
-    const orders = orderService.getOrderlistByUserId(userId);
+    const orders = await orderService.getOrderlistByUserId(userId);
     res.status(201).json(orders);
   })
 );

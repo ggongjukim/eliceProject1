@@ -38,6 +38,7 @@ const OrderSchema = new Schema(
     requirement: {
       type: String,
       required: false,
+      default: "",
     },
     process: {
       type: String,
