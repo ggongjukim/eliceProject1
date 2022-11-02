@@ -131,8 +131,8 @@ userRouter.delete(
   adminRequired,
   asyncHandler(async function (req, res, next) {
     const { userId } = req.params;
-    const user = await userService.deleteUser(userId);
-    res.json(user);
+    const result = await userService.deleteUser(userId);
+    res.status(201).json(result);
   })
 );
 
