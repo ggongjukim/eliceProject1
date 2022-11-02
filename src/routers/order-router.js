@@ -41,7 +41,7 @@ orderRouter.patch(
   asyncHandler(async function (req, res, next) {
     const { orderId } = req.params;
     const order = await orderService.getOrderById(orderId);
-    if (order.process !== "WAIT") {
+    if (order.process === "COMPLETED" || order.process === "CANCEL") {
       throw new Error("배송 정보를 수정할 수 없는 상태입니다");
     }
 
