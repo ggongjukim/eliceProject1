@@ -50,7 +50,11 @@ orderlistRouter.get(
 orderlistRouter.get(
   "/:userId",
   loginRequired,
-  asyncHandler(async function () {})
+  asyncHandler(async function () {
+    const { userId } = req.params;
+    const orders = orderService.getOrderlistByUserId(userId);
+    res.status(201).json(orders);
+  })
 );
 
 export { orderRouter, orderlistRouter };

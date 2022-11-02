@@ -9,13 +9,18 @@ export class OrderModel {
     return newOrder;
   }
 
-  async findById(orderId) {
+  async findByOrderId(orderId) {
     const order = await Order.findById({ _id: orderId });
     return order;
   }
 
   async findAll() {
     const orders = await Order.find({});
+    return orders;
+  }
+
+  async findByUserId(userId) {
+    const orders = await Order.find({ user: userId });
     return orders;
   }
 
