@@ -148,7 +148,7 @@ class UserService {
   }
 
   // 이메일로 유저 받아오기
-  async getEmail(email) {
+  async getUserByEmail(email) {
     const user = await this.userModel.findByEmail(email);
     return user;
   }
