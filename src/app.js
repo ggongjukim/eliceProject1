@@ -9,6 +9,7 @@ import {
   categorylistRouter,
   orderRouter,
   orderlistRouter,
+  cartRouter,
 } from "./routers";
 import { errorHandler } from "./middlewares";
 
@@ -32,6 +33,7 @@ app.use("/api/category", categoryRouter);
 app.use("/api/categorylist", categorylistRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/orderlist", orderlistRouter);
+app.use("/api/cart", cartRouter);
 
 app.use(function (req, res, next) {
   res.status(404).json({ result: "error", reason: "page not found" });
