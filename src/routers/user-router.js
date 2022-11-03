@@ -56,11 +56,22 @@ userRouter.post(
   })
 );
 
+userRouter.get(
+  "/me",
+  loginRequired,
+  asyncHandler(async function (req, res, next) {
+    const userId = req.currentUserId;
+    const user = await userService.getUser(userId);
+    res.status(201).json(user);
+  })
+);
+
 // 전체 유저 목록을 가져옴 (배열 형태임)
 // 미들웨어로 loginRequired 를 썼음 (이로써, jwt 토큰이 없으면 사용 불가한 라우팅이 됨)
 userRouter.get(
   "/userlist",
   loginRequired,
+  adminRequired,
   asyncHandler(async function (req, res, next) {
     // 전체 사용자 목록을 얻음
     const users = await userService.getUsers();
@@ -71,7 +82,7 @@ userRouter.get(
 );
 
 userRouter.patch(
-  "/user/:userId",
+  "/user",
   loginRequired,
   asyncHandler(async function (req, res, next) {
     // content-type 을 application/json 로 프론트에서
@@ -83,7 +94,7 @@ userRouter.patch(
     }
 
     // params로부터 id를 가져옴
-    const userId = req.params.userId;
+    const userId = req.currentUserId;
 
     // body data 로부터 업데이트할 사용자 정보를 추출함.
     const { fullName, password, address } = req.body;
@@ -120,6 +131,7 @@ userRouter.patch(
 userRouter.get(
   "/user/:userId",
   loginRequired,
+  adminRequired,
   asyncHandler(async function (req, res, next) {
     const { userId } = req.params;
     const user = await userService.getUser(userId);

@@ -7,6 +7,8 @@ import {
   productlistRouter,
   categoryRouter,
   categorylistRouter,
+  orderRouter,
+  orderlistRouter,
 } from "./routers";
 import { errorHandler } from "./middlewares";
 
@@ -28,6 +30,8 @@ app.use("/api/product", productRouter);
 app.use("/api/productlist", productlistRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/categorylist", categorylistRouter);
+app.use("/api/order", orderRouter);
+app.use("/api/orderlist", orderlistRouter);
 
 app.use(function (req, res, next) {
   res.status(404).json({ result: "error", reason: "page not found" });
