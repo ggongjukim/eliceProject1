@@ -86,10 +86,21 @@ orderlistRouter.get(
 );
 
 orderlistRouter.get(
-  "/:userId",
+  "/me",
   loginRequired,
   asyncHandler(async function (req, res, next) {
-    const { userId } = req.params;
+    const userId = req.currentUserId;
+    const orders = await orderService.getOrderlistByUserId(userId);
+    res.status(201).json(orders);
+  })
+);
+
+orderlistRouter.get(
+  "/:userId",
+  loginRequired,
+  adminRequired,
+  asyncHandler(async function (req, res, next) {
+    let { userId } = req.params;
     const orders = await orderService.getOrderlistByUserId(userId);
     res.status(201).json(orders);
   })
