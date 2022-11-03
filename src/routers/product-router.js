@@ -79,19 +79,24 @@ productRouter.get(
 productlistRouter.get(
   "/",
   asyncHandler(async function (req, res, next) {
-    const { category } = req.query;
-    let categoryId;
+    // 카테고리 확인
+    let category;
     if (!!category) {
-      const rsp = await categoryService.getCategoryByName(category);
+      const rsp = await categoryService.getCategoryByName(req.query.category);
       if (!rsp) {
         throw new Error("존재하지 않는 카테고리 입니다");
       }
-      categoryId = rsp._id;
+      category = rsp._id;
     }
+
+    //페이지네이션
+    const page = Number(req.query.page || 1); // url 쿼리에서 page 받기, 기본값 1
+    const perPage = Number(req.query.perPage || 10); // url 쿼리에서 perPage 받기, 기본값 10
+
     const filter = {
-      ...(category && { category: categoryId }),
+      ...(category && { category }),
     };
-    const products = await productService.getProductlist(filter);
+    const products = await productService.getProductlist(filter, page, perPage);
     res.status(201).json(products);
   })
 );

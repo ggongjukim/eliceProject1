@@ -10,8 +10,8 @@ class ProductService {
     return createdNewProduct;
   }
 
-  async getProductlist(filter) {
-    const products = await this.productModel.findAll(filter);
+  async getProductlist(filter, page, perPage) {
+    const products = await this.productModel.findAll(filter, page, perPage);
     return products;
   }
 

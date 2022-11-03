@@ -16,11 +16,19 @@ export class ProductModel {
     return product;
   }
 
-  async findAll(filter) {
-    const product = await Product.find(filter)
-      .populate("category")
-      .sort({ createdAt: -1 });
-    return product;
+  async findAll(filter, page, perPage) {
+    const [total, products] = Promise.all([
+      Product.countDocuments(filter),
+      Product.find(filter)
+        .populate("category")
+        .sort({ createdAt: -1 })
+        .skip(perPage * (page - 1))
+        .limit(perPage),
+    ]);
+
+    const totalPage = Math.ceil(total / perPage);
+
+    return { products, page, perPage, totalPage };
   }
 
   async update(productId, update) {
