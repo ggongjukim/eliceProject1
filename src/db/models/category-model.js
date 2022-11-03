@@ -14,6 +14,11 @@ export class CategoryModel {
     return category;
   }
 
+  async findByName(name) {
+    const category = await Category.findOne({ name });
+    return category;
+  }
+
   async findAll() {
     const categories = await Category.find({}).sort({ createdAt: -1 });
     return categories;

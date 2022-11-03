@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { upload } from "../utils";
 import { asyncHandler } from "../utils";
-import { productService } from "../services";
+import { productService, categoryService } from "../services";
 import { loginRequired, adminRequired } from "../middlewares";
 
 const productRouter = Router();
@@ -79,7 +79,19 @@ productRouter.get(
 productlistRouter.get(
   "/",
   asyncHandler(async function (req, res, next) {
-    const products = await productService.getProductlist();
+    const { category } = req.query;
+    let categoryId;
+    if (!!category) {
+      const rsp = await categoryService.getCategoryByName(category);
+      if (!rsp) {
+        throw new Error("존재하지 않는 카테고리 입니다");
+      }
+      categoryId = rsp._id;
+    }
+    const filter = {
+      ...(category && { category: categoryId }),
+    };
+    const products = await productService.getProductlist(filter);
     res.status(201).json(products);
   })
 );

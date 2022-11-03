@@ -10,8 +10,8 @@ class ProductService {
     return createdNewProduct;
   }
 
-  async getProductlist() {
-    const products = await this.productModel.findAll();
+  async getProductlist(filter) {
+    const products = await this.productModel.findAll(filter);
     return products;
   }
 
