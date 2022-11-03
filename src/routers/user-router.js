@@ -82,9 +82,8 @@ userRouter.get(
 );
 
 userRouter.patch(
-  "/user/:userId",
+  "/user",
   loginRequired,
-  adminRequired,
   asyncHandler(async function (req, res, next) {
     // content-type 을 application/json 로 프론트에서
     // 설정 안 하고 요청하면, body가 비어 있게 됨.
@@ -95,7 +94,7 @@ userRouter.patch(
     }
 
     // params로부터 id를 가져옴
-    const userId = req.params.userId;
+    const userId = req.currentUserId;
 
     // body data 로부터 업데이트할 사용자 정보를 추출함.
     const { fullName, password, address } = req.body;
