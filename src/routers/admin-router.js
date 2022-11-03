@@ -1,9 +1,10 @@
 import express, { Router } from 'express';
 import path from 'path';
 import is from '@sindresorhus/is';
-import { categoryService } from '../services';
+import { categoryService, productService } from '../services';
+import { upload } from '../utils/upload';
 
-const adminRouter = express.Router(); // admin/ 시작
+const adminRouter = express.Router();
 
 // 카테고리 전체조회
 adminRouter.get('/categories', async (req, res, next) => {
@@ -33,6 +34,36 @@ adminRouter.delete('/categories/:name', async (req, res, next) => {
     try {
         const deleteCategory = await categoryService.deleteCategory({ name });
         res.json(deleteCategory);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// 상품 전체 조회
+adminRouter.get('/products', async (req, res, next) => {
+    try {
+        const products = await productService.findAllProducts();
+        req.status(200).json(products);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// 상품 생성
+// 카테고리쪽 모델 잘못됨 PR
+adminRouter.post('/products', upload.single('image'), async (req, res, next) => {
+    try {
+        const { name, price, category, description } = req.body;
+        const categoryId = await categoryService.getCategoryId(category);
+        const createdProduct = await productService.addProduct({
+            name,
+            price,
+            category: categoryId,
+            description,
+            images: [req.file.path],
+        });
+
+        res.status(201).json('success');
     } catch (error) {
         next(error);
     }

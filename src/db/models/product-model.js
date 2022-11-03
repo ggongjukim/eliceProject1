@@ -4,7 +4,8 @@ import { ProductSchema } from '../schemas/product-schema';
 const Product = model('products', ProductSchema);
 
 export class ProductModel {
-    async create(productInfo) {
+    async createProduct(productInfo) {
+        console.log(productInfo);
         const createdNewProduct = await Product.create(productInfo);
         return createdNewProduct;
     }

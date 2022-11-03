@@ -53,7 +53,7 @@ async function deleteCategory(data) {
     if (deletedCount > 0) alert('삭제되었습니다');
 }
 
-function handleDepthZero(e) {
+function handleCreate(e) {
     e.preventDefault();
 
     const categoryName = categoryInput.value;
@@ -63,9 +63,8 @@ function handleDepthZero(e) {
 
     try {
         const categoryCreadted = cretedCategory(data);
-    } catch (err) {
-        console.error(err.stack);
-        alert(`문제가 발생하였습니다. 확인 후 다시 시도해 주세요: ${err.message}`);
+    } catch (error) {
+        alert(`문제가 발생하였습니다. 확인 후 다시 시도해 주세요: ${error.message}`);
     } finally {
         loadCategories();
         categoryInput.value = '';
@@ -73,5 +72,5 @@ function handleDepthZero(e) {
 }
 
 function addAllEvents() {
-    categoryAddBtn.addEventListener('click', handleDepthZero);
+    categoryAddBtn.addEventListener('click', handleCreate);
 }

@@ -8,6 +8,12 @@ export class CategoryModel {
         const categories = await Category.find({});
         return categories;
     }
+    async getCategoryId(name) {
+        const searchId = await Category.findOne({ name }).select('_id');
+        const { _id: id } = searchId;
+        console.log(`id: ${id.toString()}`);
+        return id.toString();
+    }
     async createCategory(name) {
         const createdCategory = await Category.create(name);
         return createdCategory;

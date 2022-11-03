@@ -1,4 +1,4 @@
-import { categoryModel, productModel } from '../db';
+import { categoryModel } from '../db';
 
 //카테고리
 class CategoryService {
@@ -10,6 +10,12 @@ class CategoryService {
     async getCategories() {
         const categories = await this.categoryModel.findAllCategories();
         return categories;
+    }
+
+    // 카테고리Id 가져오기
+    async getCategoryId(name) {
+        const categoryId = await this.categoryModel.getCategoryId(name);
+        return categoryId;
     }
 
     // 카테고리 생성
@@ -27,33 +33,4 @@ class CategoryService {
 
 const categoryService = new CategoryService(categoryModel);
 
-class ProductService {
-    async addProduct(productInfo) {
-        const createdNewProduct = await productModel.create(productInfo);
-        return createdNewProduct;
-    }
-
-    async getProductlist() {
-        const products = await productModel.findAll();
-        return products;
-    }
-
-    async getProductById(productId) {
-        const product = await productModel.findById(productId);
-        return product;
-    }
-
-    async setProduct(productId, toUpdate) {
-        const product = await productModel.update(productId, toUpdate);
-        return product;
-    }
-
-    async deleteProduct(productId) {
-        const result = await productModel.deleteById(productId);
-        return result;
-    }
-}
-
-const productService = new ProductService();
-
-export { categoryService, productService };
+export { categoryService };
