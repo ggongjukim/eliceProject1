@@ -1,4 +1,6 @@
 import { productModel } from "../db";
+import fs from "fs";
+import path from "path";
 
 class ProductService {
   constructor(productModel) {
@@ -26,8 +28,11 @@ class ProductService {
   }
 
   async deleteProduct(productId) {
-    const result = await this.productModel.deleteById(productId);
-    return result;
+    const product = await this.productModel.deleteById(productId);
+    product.images.forEach((src) => {
+      fs.unlinkSync(path.join(__dirname, `../views${src}`));
+    });
+    return { success: true };
   }
 }
 
