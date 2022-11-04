@@ -4,9 +4,9 @@ import { UserSchema } from "../schemas/user-schema";
 const User = model("users", UserSchema);
 
 export class UserModel {
-  async findByEmail(email) {
-    const user = await User.findOne({ email });
-    return user;
+  async checkByEmail(email) {
+    const cnt = await User.countDocuments({ email });
+    return cnt > 0;
   }
 
   async findById(userId) {

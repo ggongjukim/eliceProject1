@@ -10,8 +10,8 @@ class UserService {
 
   async addUser(userInfo) {
     const { email, fullName, password, postCode, address, isAdmin } = userInfo;
-    const user = await this.userModel.findByEmail(email);
-    if (user) {
+    const isExist = await this.userModel.checkByEmail(email);
+    if (isExist) {
       throw new Error(
         "이 이메일은 현재 사용중입니다. 다른 이메일을 입력해 주세요."
       );
@@ -33,8 +33,8 @@ class UserService {
 
   async getUserToken(loginInfo) {
     const { email, password } = loginInfo;
-    const user = await this.userModel.findByEmail(email);
-    if (!user) {
+    const isExist = await this.userModel.checkByEmail(email);
+    if (!isExist) {
       throw new Error(
         "해당 이메일은 가입 내역이 없습니다. 다시 한 번 확인해 주세요."
       );
@@ -131,9 +131,9 @@ class UserService {
     return user;
   }
 
-  async getUserByEmail(email) {
-    const user = await this.userModel.findByEmail(email);
-    return user;
+  async checkUserByEmail(email) {
+    const isExist = await this.userModel.checkByEmail(email);
+    return isExist;
   }
 }
 
