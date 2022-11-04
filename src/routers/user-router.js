@@ -47,6 +47,16 @@ userRouter.post(
   })
 );
 
+userRouter.post(
+  "/signout",
+  loginRequired,
+  asyncHandler(async function (req, res, next) {
+    const userId = req.currentUserId;
+    const result = await userService.deleteUser(userId);
+    res.status(201).json(result);
+  })
+);
+
 userRouter.get(
   "/me",
   loginRequired,
@@ -75,17 +85,6 @@ userRouter.get(
     const { userId } = req.params;
     const user = await userService.getUser(userId);
     res.status(201).json(user);
-  })
-);
-
-userRouter.delete(
-  "/user/:userId",
-  loginRequired,
-  adminRequired,
-  asyncHandler(async function (req, res, next) {
-    const { userId } = req.params;
-    const result = await userService.deleteUser(userId);
-    res.status(201).json(result);
   })
 );
 
@@ -150,6 +149,17 @@ userRouter.delete(
     const deletedUserInfo = await userService.deleteUser(userId, password);
 
     res.status(200).json(deletedUserInfo);
+  })
+);
+
+userRouter.delete(
+  "/user/:userId",
+  loginRequired,
+  adminRequired,
+  asyncHandler(async function (req, res, next) {
+    const { userId } = req.params;
+    const result = await userService.deleteUser(userId);
+    res.status(201).json(result);
   })
 );
 
