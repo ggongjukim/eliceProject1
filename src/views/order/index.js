@@ -1,4 +1,5 @@
 import * as Api from '/api.js';
+
 const testdata1 = [
     {
         user: "elice0",
@@ -30,47 +31,54 @@ const testdata1 = [
 
 let orderList = document.querySelector("#template");
 
+//fetch api 호출 
 
 //get
 //데이터 갯수 만큼 노드 복제
 let idNum = 0;
-async function deepCopy(idx)  {
-  const testdata = await Api.get('/api/admin/order');
-  // 'test' node 선택
-  const testDiv = document.querySelector('#template');
-  // 노드 복사하기 (deep copy)
-  const newNode = testDiv.cloneNode(true);
-  // 복사된 Node id 변경하기
-  newNode.id = 'copyNode' + idNum;
-  idNum++;
-  // 복사한 노드 붙여넣기
-  testDiv.after(newNode);
-  //값 넣기
-  newNode.querySelector(".user").textContent = testdata[idx].user;
-  newNode.querySelector(".product").textContent = testdata[idx].product;
-  newNode.querySelector(".orderPrice").textContent = 9900*testdata[idx].amount;//product price
-  newNode.querySelector(".orderDate").textContent = testdata[idx].orderDate;
-  //옵션 - 배송상태
-  let selectList = newNode.querySelectorAll(".process select option")
-  selectList.forEach(item =>{
-    if(item.value ===  testdata[idx].process){
-        item.selected = true
+let testdataLength = 0;
+const testDiv = document.querySelector('#template');
+
+async function loadOrderList()  {
+
+  const testdata = await Api.get('/api/orderlist');
+  testdataLength = testdata.length;
+  console.log("testsdata!",testdata.length,testdata);
+
+  testdata.map((item)=>{
+    
+    console.log("생성",item)
+    const newNode = testDiv.cloneNode(true);
+
+    newNode.id = 'copyNode' + idNum;
+    idNum++;
+    document.querySelectorAll(".orderList")[0].after(newNode);
+    //값 넣기 //한 사람이 여러개 샀다면 어뜨카지?
+    newNode.querySelector(".user").textContent =item.user.fullName;
+    newNode.querySelector(".product").textContent = item.list[0].product.name;
+    newNode.querySelector(".orderPrice").textContent = item.list[0].product.price*item.list[0].amount;//product price
+    newNode.querySelector(".orderDate").textContent = item.createdAt.split("T")[0];
+    //옵션 - 배송상태
+    let selectList = newNode.querySelectorAll(".process select option")
+    selectList.forEach(select =>{
+        if(select.value ===  item.process){
+            select.selected = true
+        }
+    })
+
+    if(testdata[idx].process!="COMPLETED"){
+        newNode.querySelector("#deleteBtn").style.display = "none";
+        // newNode.removeChild(newNode.querySelector("#deleteBtn").parentElement);
+        // console.log("삭제버튼 안보임")
     }
+    document.querySelector("#template").style.display = "none";
+
   })
 
-  console.log(selectList)
-  if(testdata[idx].process!="COMPLETED"){
-    newNode.querySelector("#deleteBtn").parentElement.style = "none";
-    newNode.removeChild(newNode.querySelector("#deleteBtn").parentElement);
-    console.log("삭제버튼 안보임")
-  }
 
 }
+loadOrderList();
 
-for(let i=0;i<testdata.length ;i++){
-    deepCopy(i);
-}
-orderList.style.display = "none";
 
 
 
@@ -82,7 +90,7 @@ console.log(deleteBtnList)
 
 function removeList(e) {
     console.log("e",e.target.parentElement.parentElement)
-    if (confirm('정말 삭제합니까?')) {
+    if (confirm('주문 내역을 삭제하시겠습니까?')) {
         var li = e.target.parentElement.parentElement;
         document.querySelector("body").removeChild(li);
         console.log("삭제함")
