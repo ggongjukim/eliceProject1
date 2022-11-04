@@ -30,6 +30,8 @@ const testdata1 = [
 ]
 
 let orderList = document.querySelector("#template");
+let deleteBtnList = document.querySelectorAll('#deleteBtn');
+
 
 //fetch api 호출 
 
@@ -51,6 +53,7 @@ async function loadOrderList()  {
     const newNode = testDiv.cloneNode(true);
 
     newNode.id = 'copyNode' + idNum;
+    newNode.className += " copy"
     idNum++;
     document.querySelectorAll(".orderList")[0].after(newNode);
     //값 넣기 //한 사람이 여러개 샀다면 어뜨카지?
@@ -66,16 +69,36 @@ async function loadOrderList()  {
         }
     })
 
-    if(testdata[idx].process!="COMPLETED"){
+    if(item.process!="COMPLETED"){
         newNode.querySelector("#deleteBtn").style.display = "none";
-        // newNode.removeChild(newNode.querySelector("#deleteBtn").parentElement);
-        // console.log("삭제버튼 안보임")
     }
-    document.querySelector("#template").style.display = "none";
+    // document.querySelector("#template").style.display = "none";
+    
+    //삭제버튼에 삭제기능 추가
+    // deleteBtnList.forEach(item=>{
+    //     item.addEventListener('click',deleteOrderList)
+    // })
+    newNode.querySelector("#deleteBtn").addEventListener("click",(e)=>{
+        console.log("삭제시도",e.target.parentElement.parentElement)
+        if (confirm('주문 내역을 삭제하시겠습니까?')) {
+            var li = e.target.parentElement.parentElement;
+            document.querySelector("body").removeChild(li);
+            console.log("삭제함")
+            
+            //데이터에서도 삭제
+            deleteOrderList() // 여기 하는중 
+        }
 
+        // //다시로드 앞에 먼저 제거해조야댐
+        // document.querySelectorAll(".copy").forEach(item=>{
+        //     document.querySelector("body").removeChild(item)
+    
+        // })
+        // loadOrderList();
+    })
   })
 
-
+  document.querySelector('#template').style.display = "none";
 }
 loadOrderList();
 
@@ -85,30 +108,14 @@ loadOrderList();
 
 
 //삭제 기능 - complete 일때만 삭제 버튼 보여야함
-let deleteBtnList = document.querySelectorAll('#deleteBtn');
-console.log(deleteBtnList)
+//데이터 삭제
+async function deleteOrderList() {
 
-function removeList(e) {
-    console.log("e",e.target.parentElement.parentElement)
-    if (confirm('주문 내역을 삭제하시겠습니까?')) {
-        var li = e.target.parentElement.parentElement;
-        document.querySelector("body").removeChild(li);
-        console.log("삭제함")
-        
-        //데이터에서도 삭제
-        deleteOrder() // 인자로 무엇을 넣어줘야하지
-      }
-
-  }
-console.log(typeof deleteBtnList)
-deleteBtnList.forEach(item=>{
-    item.addEventListener('click',removeList)
-})
-
-async function deleteOrder(data){
-    const result = await Api.delete('/api/admin/order', data);
 
 }
+
+
+
 
 //수정 기능
 let changeBtnList = document.querySelectorAll('#changeBtn');

@@ -43,8 +43,8 @@ async function handleSubmit(e) {
     const { isAdmin } = user;
 
     // 로그인 성공, 토큰 및 admin 유무를 로컬 스토리지에 저장
-    sessionStorage.setItem("token", token);
-    sessionStorage.setItem("isAdmin", isAdmin);
+    localStorage.setItem("token", token);
+    localStorage.setItem("isAdmin", isAdmin);
 
     alert(`정상적으로 로그인되었습니다.`);
 
