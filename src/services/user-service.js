@@ -133,7 +133,7 @@ class UserService {
 
   async checkUserByEmail(email) {
     const isExist = await this.userModel.checkByEmail(email);
-    return isExist;
+    return { isExist };
   }
 }
 
