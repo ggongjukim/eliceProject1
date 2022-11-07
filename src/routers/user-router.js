@@ -136,8 +136,8 @@ userRouter.patch(
  * @author: 김상현
  * @detail: mypage 회원탈퇴를 위한 delete API
  */
-userRouter.delete(
-  "/user",
+userRouter.post(
+  "/signout",
   loginRequired,
   asyncHandler(async function (req, res, next) {
     if (is.emptyObject(req.body)) {
