@@ -41,9 +41,8 @@ userRouter.post(
 
     const email = req.body.email;
     const password = req.body.password;
-    const userToken = await userService.getUserToken({ email, password });
-    const user = await userService.getUserByEmail(email);
-    res.status(200).json({ userToken, user });
+    const { token, user } = await userService.getUserToken({ email, password });
+    res.status(200).json({ userToken: token, user });
   })
 );
 

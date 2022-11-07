@@ -33,8 +33,8 @@ class UserService {
 
   async getUserToken(loginInfo) {
     const { email, password } = loginInfo;
-    const isExist = await this.userModel.checkByEmail(email);
-    if (!isExist) {
+    const user = await this.userModel.findByEmail(email);
+    if (!user) {
       throw new Error(
         "해당 이메일은 가입 내역이 없습니다. 다시 한 번 확인해 주세요."
       );
@@ -58,7 +58,7 @@ class UserService {
       secretKey
     );
 
-    return { token };
+    return { token, user };
   }
 
   async getUsers() {

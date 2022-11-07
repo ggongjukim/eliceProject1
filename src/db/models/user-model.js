@@ -9,6 +9,11 @@ export class UserModel {
     return cnt > 0;
   }
 
+  async findByEmail(email) {
+    const user = await User.findOne({ email });
+    return user;
+  }
+
   async findById(userId) {
     const user = await User.findOne({ _id: userId });
     return user;
