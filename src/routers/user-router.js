@@ -108,7 +108,7 @@ userRouter.patch(
     }
 
     const userId = req.currentUserId;
-    const { fullName, password, address, currentPassword } = req.body;
+    const { fullName, password, address, currentPassword, postCode } = req.body;
 
     if (!currentPassword) {
       throw new Error("정보를 변경하려면, 현재의 비밀번호가 필요합니다.");
