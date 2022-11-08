@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { asyncHandler } from "../utils";
-import { orderService, cartService, userService } from "../services";
+import { orderService, cartService } from "../services";
 import { loginRequired, adminRequired } from "../middlewares";
 
 const orderRouter = Router();
@@ -11,8 +11,7 @@ orderRouter.post(
   loginRequired,
   asyncHandler(async function (req, res, next) {
     const { cartId, receiver, phone, address, requirement } = req.body;
-    const { list } = await cartService.deleteCartById(cartId);
-    const user = await userService.getUser(req.currentUserId);
+    const { user, list } = await cartService.deleteCartById(cartId);
 
     const newOrder = await orderService.addOrder({
       user,
