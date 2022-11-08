@@ -5,7 +5,7 @@ function getStorage(name, parse = true) {
       ? JSON.parse(localStorage.getItem(name))
       : localStorage.getItem(name);
   } catch (e) {
-    console.warn(e);
+    console.log(e);
   }
   return item;
 }

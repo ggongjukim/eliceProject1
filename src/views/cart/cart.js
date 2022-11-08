@@ -82,6 +82,7 @@ async function memberCart(type) {
       return Storage.get("cart");
     },
     async mem() {
+      console.log("mem");
       const item = Storage.get("cart");
       if (item) {
         const postBody = item.map(({ amount, product }) => ({
@@ -95,11 +96,12 @@ async function memberCart(type) {
         );
         Storage.clear("cart");
       }
-      return Api.get(`http://localhost:${PORT}`, "api/cart");
+      const data = await Api.get(`http://localhost:${PORT}`, "api/cart");
+      return data.list;
     },
   };
 
-  let data = (await memType[type]())?.list;
+  let data = await memType[type]();
 
   if (!data) {
     emptyCart();
@@ -190,6 +192,9 @@ async function memberCart(type) {
           : window.location.replace("/login");
         break;
 
+      case "product-image":
+        location.replace(`/products/${id}`);
+
       default:
         return;
     }
@@ -209,6 +214,18 @@ function getData(data, id, num) {
 
 function getProductPrice(data, num) {
   return `${(data.product.price * num).toLocaleString()}원`;
+}
+
+function getStorage(name, parse = true) {
+  let item = null;
+  try {
+    item = parse
+      ? JSON.parse(localStorage.getItem(name))
+      : localStorage.getItem(name);
+  } catch (e) {
+    console.log(e);
+  }
+  return item;
 }
 
 token ? memberCart("mem") : memberCart("nonMem");
