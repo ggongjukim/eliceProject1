@@ -3,6 +3,18 @@ import { userModel } from "../db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+const getPasswordField = async (loginMethod, password = "") => {
+  switch (loginMethod) {
+    case "NORMAL":
+      const hashedPassword = await bcrypt.hash(password, 10);
+      return { password: hashedPassword };
+    case "KAKAO":
+      return {};
+    default:
+      return {};
+  }
+};
+
 class UserService {
   constructor(userModel) {
     this.userModel = userModel;
@@ -25,28 +37,17 @@ class UserService {
       );
     }
 
-    let newUserInfo;
-    if (loginMethod === "NOMAL") {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      newUserInfo = {
-        fullName,
-        email,
-        password: hashedPassword,
-        postCode,
-        address,
-        isAdmin,
-        loginMethod,
-      };
-    } else if (loginMethod === "KAKAO") {
-      newUserInfo = {
-        fullName,
-        email,
-        postCode,
-        address,
-        isAdmin,
-        loginMethod,
-      };
-    }
+    const passwordField = await getPasswordField(loginMethod, password);
+    const newUserInfo = {
+      fullName,
+      email,
+      postCode,
+      address,
+      isAdmin,
+      loginMethod,
+      ...passwordField,
+    };
+
     const createdNewUser = await this.userModel.create(newUserInfo);
     return createdNewUser;
   }
