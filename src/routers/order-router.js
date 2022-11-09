@@ -91,7 +91,13 @@ orderlistRouter.get(
   loginRequired,
   asyncHandler(async function (req, res, next) {
     const userId = req.currentUserId;
-    const orders = await orderService.getOrderlistByUserId(userId);
+    const page = Number(req.query.page || 1);
+    const perPage = Number(req.query.perPage || 10);
+    const orders = await orderService.getOrderlistByUserId(
+      userId,
+      page,
+      perPage
+    );
     res.status(201).json(orders);
   })
 );
@@ -101,8 +107,14 @@ orderlistRouter.get(
   loginRequired,
   adminRequired,
   asyncHandler(async function (req, res, next) {
-    let { userId } = req.params;
-    const orders = await orderService.getOrderlistByUserId(userId);
+    const { userId } = req.params;
+    const page = Number(req.query.page || 1);
+    const perPage = Number(req.query.perPage || 10);
+    const orders = await orderService.getOrderlistByUserId(
+      userId,
+      page,
+      perPage
+    );
     res.status(201).json(orders);
   })
 );
