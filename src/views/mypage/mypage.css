@@ -1,4 +1,4 @@
-.active {
+.clicked {
   text-decoration: underline;
 }
 
@@ -8,4 +8,8 @@
 
 .hidden {
   display: none;
+}
+
+.event-ignore {
+  pointer-events: none;
 }
