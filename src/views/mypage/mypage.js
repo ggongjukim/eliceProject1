@@ -192,19 +192,30 @@ import * as Api from "/api.js";
  * @description 고객의 주문정보를 조회, 수정, 삭제 하는 코드입니다.
  */
 
+let data = null;
+let currentPage = null;
+let last = null;
+let first = null;
+let totalP = null;
+
 const $ul = document.querySelector("#page-btn");
+const $table = document.querySelector(".order-table");
+const $noData = document.querySelector(".no-data");
+const $orderData = document.querySelector(".order-data");
 
 async function getOrderInfoData(currentPage) {
   // let data = Api.get('/api',`orderlist/me?page=${currentPage}&perPage=5`)
-  let data = await fetch("./test.json").then((res) => res.json());
-
+  data = await fetch("./test.json").then((res) => res.json());
+  currentPage = data.page;
   console.log(data);
-  renderOrderList(data);
+  if (data.orders.length > 0) {
+    $noData.classList.add("hidden");
+    $orderData.classList.remove("hidden");
+    renderOrderList(data);
+  }
 }
 
-function renderOrderList({ page, perPage, totalPage, orders }) {
-  const $table = document.querySelector(".order-table");
-  const $orderData = document.querySelector(".order-data");
+function renderOrderList({ page, perPage, totalPage, totalCount, orders }) {
   const orderState = {
     WAIT: "배송준비 중",
     INPROGRESS: "배송 중",
@@ -256,6 +267,9 @@ function renderOrderList({ page, perPage, totalPage, orders }) {
               ${orderState[process]}
             </p>
           </td>
+          <td rowspan="${list.length}" align="center">
+            <button class="order-cancel" data-id="${_id}"}>주문 취소</button>
+          </td>
         </tr>`
             : `
         <tr>
@@ -284,21 +298,23 @@ function renderOrderList({ page, perPage, totalPage, orders }) {
   <th>주문 상품 정보</th>
   <th>상품 금액(수량)</th>
   <th>배송비</th>
-  <th>배송 상태</th>`
+  <th>배송 상태</th>
+  <th>주문 취소<th>
+  `
   );
   $table.insertAdjacentHTML("beforeend", orderHTML);
-  pagenation(page, perPage, totalPage);
+  pagenation(page, perPage, totalPage, totalCount);
 }
 
-function pagenation(page, perPage, totalPage) {
+function pagenation(page, perPage, totalPage, totalCount) {
   $ul.innerHTML = "";
-  // if(totalOrder <= 5) return; <---- 병진님한테 말해서 총 오더 길이 받아와서 인자에 totalorder 추가
+  if (totalCount <= 5) return;
   const pageGroup = Math.ceil(page / 5);
-  let last = pageGroup * 5;
+  totalP = totalPage;
+  last = pageGroup * 5;
   last > totalPage && (last = totalPage);
-  let first = last - 4;
+  first = last - 4;
   first < 0 && (first = 1);
-  // let next = last + 1;
   let prev = first - 1;
 
   if (prev > 0) {
@@ -337,29 +353,43 @@ function pagenation(page, perPage, totalPage) {
   }
 
   document.querySelector(`a[data-page="${page}"]`).classList.add("active");
-
-  $ul.addEventListener("click", (e) => {
-    e.preventDefault();
-    const target = e.target;
-    if (target.dataset.page) {
-      getOrderInfoData(target.dataset.page);
-    }
-
-    switch (target.className) {
-      case "all-prev-btn":
-        getOrderInfoData(1);
-        break;
-      case "prev-btn":
-        getOrderInfoData(first - 1);
-        break;
-      case "all-next-btn":
-        getOrderInfoData(totalPage);
-        break;
-      case "next-btn":
-        getOrderInfoData(last + 1);
-        break;
-    }
-  });
 }
-// 해야할것 주문 삭제 수정기능 추가
+
+$ul.addEventListener("click", (e) => {
+  e.preventDefault();
+  const target = e.target;
+  if (target.dataset.page) {
+    getOrderInfoData(target.dataset.page);
+  }
+
+  switch (target.className) {
+    case "all-prev-btn":
+      getOrderInfoData(1);
+      break;
+    case "prev-btn":
+      getOrderInfoData(first - 1);
+      break;
+    case "all-next-btn":
+      getOrderInfoData(totalP);
+      break;
+    case "next-btn":
+      getOrderInfoData(last + 1);
+      break;
+  }
+});
+
+$table.addEventListener("click", (e) => {
+  e.preventDefault();
+  const target = e.target;
+  switch (target.className) {
+    case "order-cancel":
+      const id = target.dataset.id;
+      Api.patch("/api/order", id, { process: "CANCEL" });
+      getOrderInfoData(currentPage);
+      target.innerText = "취소 완료";
+      target.disabled = true;
+      break;
+  }
+});
+
 getOrderInfoData();

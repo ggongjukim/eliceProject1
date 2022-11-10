@@ -5,3 +5,7 @@
 #page-btn {
   display: flex;
 }
+
+.hidden {
+  display: none;
+}
