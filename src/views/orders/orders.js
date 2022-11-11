@@ -102,10 +102,10 @@ async function loadOrderList() {
               break;
             case "배송완료":
               changeProcess = COMPLETED;
+              e.target.parentElement.parentElement.querySelector("#deleteBtn").classList.add("on");
+              break;
             case "주문취소":
               changeProcess = CANCEL;
-              break;
-              e.target.parentElement.parentElement.querySelector("#deleteBtn").classList.add("on");
               break;
           }
       }}) 
